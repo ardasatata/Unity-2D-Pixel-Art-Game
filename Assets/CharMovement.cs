@@ -13,8 +13,16 @@ public class CharMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 horizontal = new Vector3(Input.GetAxis("Horizontal"),0.0f,0.0f);
-        Vector3 vertical = new Vector3(0.0f,0.0f,Input.GetAxis("Vertical"));
-        transform.position = transform.position + horizontal + vertical * Time.deltaTime;
+        // Vector3 movement = new Vector3(Input.GetAxis("Horizontal"),0.0f,Input.GetAxis("Vertical"));
+        Vector3 movement = new Vector3(0.0f,0.0f,0.0f);
+        if(Input.GetButton("Horizontal")){
+            print("horizontal");
+            movement = new Vector3(Input.GetAxis("Horizontal"),0.0f,Input.GetAxis("Horizontal")*-1);
+        } else if(Input.GetButton("Vertical")){
+            movement = new Vector3(Input.GetAxis("Vertical"),0.0f,Input.GetAxis("Vertical"));
+            print("vertical");
+        }
+        print(movement);
+        transform.position = transform.position + movement * Time.deltaTime;
     }
 }
