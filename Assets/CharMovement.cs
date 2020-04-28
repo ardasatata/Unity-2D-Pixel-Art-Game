@@ -7,9 +7,11 @@ public class CharMovement : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField]
     public float moveSpeed;
-    public Animation charAnim;
+    public Animator charAnim;
 
     Vector3 vertical, horizontal;
+
+    Vector3 lastDirection;
     void Start()
     {
         vertical = Camera.main.transform.forward;
@@ -45,17 +47,36 @@ public class CharMovement : MonoBehaviour
         Vector3 vector3 = new Vector3(0.0f,0.0f,0.0f);
      
         if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {  
-        vector3 += Vector3.forward;  
+            vector3 += Vector3.forward;
         }  
         if(Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.DownArrow)) {  
-        vector3 += Vector3.back;  
+            vector3 += Vector3.back;  
         }
         if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) {  
-        vector3 += Vector3.left;  
+            vector3 += Vector3.left;  
         }    
         if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {    
-        vector3 += Vector3.right; 
+            vector3 += Vector3.right; 
         }  
+
+        charAnim.SetFloat("Vertical", vector3.z);
+        charAnim.SetFloat("Horizontal", vector3.x);
+        charAnim.SetFloat("Magnitude", vector3.magnitude);
+
+        if(vector3.magnitude > 0) {
+            lastDirection = vector3;
+        }
+
+        if(vector3.magnitude < 0.001) {
+            print("magnitudad < 0.001");
+            charAnim.SetFloat("Vertical", lastDirection.z);
+            charAnim.SetFloat("Horizontal", lastDirection.x);
+        }
+
+        print(vector3);
+        print(lastDirection);
+
+        // Direction(vector3);
         
         transform.Translate(moveSpeed * vector3.normalized * Time.deltaTime);
     }
@@ -70,5 +91,16 @@ public class CharMovement : MonoBehaviour
         transform.forward = heading;
         transform.position += horizontalMovement;
         transform.position += verticalMovement;
+    }
+
+    void Direction(Vector3 movement){
+        if(movement.x > 0){
+            if(movement.z > 0){
+                print("WD");
+            } else if (movement.z < 0){
+                print("WA");
+            }
+            print("W");
+        }
     }
 }
