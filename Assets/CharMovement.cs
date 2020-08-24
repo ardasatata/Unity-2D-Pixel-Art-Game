@@ -7,14 +7,29 @@ public class CharMovement : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField]
     public float moveSpeed;
+
+    public float runSpeed = 0.5f;
     public Animator charAnim;
+
+    public BoxCollider boxCollider;
+
 
     Vector3 vertical, horizontal;
 
     Vector3 lastDirection;
+
+    public bool isCollided;
+
+    private void OnCollisionEnter(Collision other) {
+        if(other.gameObject.CompareTag("Object")){
+            isCollided = true;
+            print("nabrak Benda");
+        }
+    }
+
     void Start()
     {
-        vertical = Camera.main.transform.forward;
+        // vertical = Camera.main.transform.forward;
         vertical.y = 0;
         vertical = Vector3.Normalize(vertical);
         horizontal = Quaternion.Euler(new Vector3(0, 45, 0)) * vertical;
@@ -68,17 +83,22 @@ public class CharMovement : MonoBehaviour
         }
 
         if(vector3.magnitude < 0.001) {
-            print("magnitudad < 0.001");
             charAnim.SetFloat("Vertical", lastDirection.z);
             charAnim.SetFloat("Horizontal", lastDirection.x);
         }
 
-        print(vector3);
-        print(lastDirection);
+        //print(vector3);
+        //print(lastDirection);
 
         // Direction(vector3);
+
+        if(Input.GetKey(KeyCode.LeftShift)) {    
+            transform.Translate((moveSpeed + runSpeed) * vector3.normalized * Time.deltaTime);
+        } else {
+            transform.Translate(moveSpeed * vector3.normalized * Time.deltaTime);
+        }  
         
-        transform.Translate(moveSpeed * vector3.normalized * Time.deltaTime);
+
     }
 
     void Move(){
